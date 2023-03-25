@@ -14,5 +14,7 @@ namespace TheBreakfastLibrary.Models
         }
 
         public DbSet<TheBreakfastLibrary.Models.Department> Department { get; set; }
+        public DbSet<Seller> Seller { get; set; }
+        public DbSet<SalesRecord> SalesRecord { get; set; }
     }
 }
