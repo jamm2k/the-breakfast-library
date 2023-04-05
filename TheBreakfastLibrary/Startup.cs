@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using TheBreakfastLibrary.Models;
 using TheBreakfastLibrary.Data;
+using TheBreakfastLibrary.Services;
 
 namespace TheBreakfastLibrary
 {
@@ -42,6 +43,7 @@ namespace TheBreakfastLibrary
                         builder.MigrationsAssembly("TheBreakfastLibrary")));
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
