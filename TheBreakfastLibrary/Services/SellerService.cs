@@ -19,5 +19,11 @@ namespace TheBreakfastLibrary.Services
         {
             return _context.Seller.ToList();
         }
+
+        public void Insert(Seller sel)
+        {
+            _context.Add(sel);
+            _context.SaveChanges();
+        }
     }
 }
