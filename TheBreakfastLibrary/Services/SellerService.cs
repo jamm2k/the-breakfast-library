@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheBreakfastLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheBreakfastLibrary.Services
 {
@@ -27,7 +28,7 @@ namespace TheBreakfastLibrary.Services
         }
         public Seller FindById(int id)
         {
-            return _context.Seller.FirstOrDefault(sel => sel.Id == id);
+            return _context.Seller.Include(sel => sel.Department).FirstOrDefault(sel => sel.Id == id); //eager loading
         }
 
         public void Remove(int id)
