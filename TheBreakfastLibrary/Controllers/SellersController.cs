@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TheBreakfastLibrary.Models;
 using TheBreakfastLibrary.Models.ViewModels;
 using TheBreakfastLibrary.Services;
+using TheBreakfastLibrary.Services.Exceptions;
 
 namespace TheBreakfastLibrary.Controllers
 {
@@ -74,11 +75,49 @@ namespace TheBreakfastLibrary.Controllers
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null)
+                return NotFound();
+            
+
+            return View(obj);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+                return NotFound();
+
+            List<Department> departments = _departmentService.FindAll();
+
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments }; 
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller sel)
+        {
+            if(id != sel.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(sel);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            return View(obj);
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
     }
 }
