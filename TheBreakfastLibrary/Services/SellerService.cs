@@ -34,14 +34,23 @@ namespace TheBreakfastLibrary.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityExceptions(e.Message);
+            }
+
         }
 
         public async Task UpdateAsync(Seller obj)
         {
-            if (! await _context.Seller.AnyAsync(x => x.Id == obj.Id))
+            if (!await _context.Seller.AnyAsync(x => x.Id == obj.Id))
             {
                 throw new NotFoundException("ID not found");
             }
@@ -50,7 +59,7 @@ namespace TheBreakfastLibrary.Services
                 _context.Update(obj);
                 await _context.SaveChangesAsync();
             }
-            catch(DbUpdateConcurrencyException exception)
+            catch (DbUpdateConcurrencyException exception)
             {
                 throw new DbConcurrencyException(exception.Message);
             }
